@@ -46,7 +46,7 @@ Registriert ein neues Benutzerkonto.
 
 **Status Codes**
 
-| Code | Beschreibung                                                    |
+| Code | Beschreibung                                                       |
 | ---- | ------------------------------------------------------------------ |
 | 201  | User successfully registered.                                      |
 | 400  | Invalid data                                                       |
