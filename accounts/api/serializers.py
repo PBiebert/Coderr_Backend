@@ -22,3 +22,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop("repeated_password")
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class LoginSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ["username", "password"]
+
+    def validate(self, data):
+        try:
+            user = User.objects.get(username=data["username"])
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User doesn't exist")
+
+        if user.check_password(data["password"]):
+            return data
+        else:
+            raise serializers.ValidationError("password isn't right")

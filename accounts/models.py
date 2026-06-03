@@ -6,8 +6,8 @@ class CustomUser(AbstractUser):
     type = models.CharField(
         max_length=50, choices=[("customer", "Customer"), ("business", "Business")]
     )
-    first_name = models.CharField(max_length=30, blank=False)
-    last_name = models.CharField(max_length=30, blank=False)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
 
     # def __str__(self):
     #     return self.username
