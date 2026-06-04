@@ -9,5 +9,5 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
 
-    # def __str__(self):
-    #     return self.username
+    def __str__(self):
+        return f"id:{self.id}, username:{self.username}, type:({self.type})"

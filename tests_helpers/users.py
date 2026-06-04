@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
+from profiles.models import Profile
+from rest_framework.test import APIClient
 
 User = get_user_model()
 
@@ -22,32 +24,34 @@ BUSINESS_USER_DATA = {
 
 def customer_registration_data():
     """Returns a dictionary with valid registration data for a customer user."""
+
     return CUSTOMER_USER_DATA.copy()
 
 
 def business_registration_data():
     """Returns a dictionary with valid registration data for a business user."""
+
     return BUSINESS_USER_DATA.copy()
 
 
 def create_customer_user():
-    """Creates a customer user and returns the user and token."""
+    """Creates and returns a customer user with a profile."""
 
     data = CUSTOMER_USER_DATA.copy()
     data.pop("repeated_password")
     user = User.objects.create_user(**data)
-    token, created = Token.objects.get_or_create(user=user)
-    return user, token
+    Profile.objects.create(user=user)
+    return user
 
 
 def create_business_user():
-    """Creates a business user and returns the user and token."""
+    """Creates and returns a business user with a profile."""
 
     data = BUSINESS_USER_DATA.copy()
     data.pop("repeated_password")
     user = User.objects.create_user(**data)
-    token, created = Token.objects.get_or_create(user=user)
-    return user, token
+    Profile.objects.create(user=user)
+    return user
 
 
 def customer_login_data():

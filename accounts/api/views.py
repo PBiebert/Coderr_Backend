@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework import permissions
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .serializers import RegisterSerializer, LoginSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
+from profiles.models import Profile
 
 User = get_user_model()
 
@@ -12,12 +13,13 @@ User = get_user_model()
 class RegistrationAPIView(APIView):
     """View for user registration."""
 
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             saved_account = serializer.save()
+            Profile.objects.create(user=saved_account)
             token, created = Token.objects.get_or_create(user=saved_account)
             data = {
                 "token": token.key,
@@ -31,7 +33,7 @@ class RegistrationAPIView(APIView):
 
 
 class LoginAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)

@@ -8,13 +8,14 @@ from tests_helpers.users import customer_registration_data
 User = get_user_model()
 
 
-class RegistrationAPIHappyPathTests(APITestCase):
+class RegistrationAPITests(APITestCase):
 
     def setUp(self):
         """
         Set up valid user data for testing
         """
         self.valid_user_data = customer_registration_data()
+        self.url = reverse("registration")
 
     def test_user_can_be_created(self):
         """
@@ -34,8 +35,7 @@ class RegistrationAPIHappyPathTests(APITestCase):
         Test registration with valid data returns 201
         """
 
-        url = reverse("registration")
-        response = self.client.post(url, self.valid_user_data, format="json")
+        response = self.client.post(self.url, self.valid_user_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         user = User.objects.get(email=self.valid_user_data["email"])
@@ -49,13 +49,6 @@ class RegistrationAPIHappyPathTests(APITestCase):
         }
 
         self.assertEqual(response.data, expected_response)
-
-
-class RegistrationAPIUnhappyPathTests(APITestCase):
-
-    def setUp(self):
-        self.url = reverse("registration")
-        self.valid_user_data = customer_registration_data()
 
     def test_registration_with_invalid_password_returns_400(self):
         """
