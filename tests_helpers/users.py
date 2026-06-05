@@ -5,70 +5,54 @@ from rest_framework.test import APIClient
 
 User = get_user_model()
 
-CUSTOMER_USER_DATA = {
-    "username": "exampleCustomerUsername",
-    "email": "exampleCustomer@mail.de",
+USER_DATA = {
+    "username": "exampleUsername",
+    "email": "example@mail.de",
     "password": "examplePassword",
     "repeated_password": "examplePassword",
     "type": "customer",
 }
 
-BUSINESS_USER_DATA = {
-    "username": "exampleBusinessUsername",
-    "email": "exampleBusinessUsername@mail.de",
-    "password": "examplePassword",
-    "repeated_password": "examplePassword",
-    "type": "business",
-}
+
+def user_registration_data():
+    """Returns a dictionary with valid registration data for a user."""
+
+    return USER_DATA.copy()
 
 
-def customer_registration_data():
-    """Returns a dictionary with valid registration data for a customer user."""
+def create_user(**kwargs):
+    """Creates and returns a user with a profile."""
 
-    return CUSTOMER_USER_DATA.copy()
-
-
-def business_registration_data():
-    """Returns a dictionary with valid registration data for a business user."""
-
-    return BUSINESS_USER_DATA.copy()
-
-
-def create_customer_user():
-    """Creates and returns a customer user with a profile."""
-
-    data = CUSTOMER_USER_DATA.copy()
+    data = USER_DATA.copy()
+    data.update(kwargs)
     data.pop("repeated_password")
     user = User.objects.create_user(**data)
     Profile.objects.create(user=user)
     return user
 
 
-def create_business_user():
-    """Creates and returns a business user with a profile."""
-
-    data = BUSINESS_USER_DATA.copy()
-    data.pop("repeated_password")
-    user = User.objects.create_user(**data)
-    Profile.objects.create(user=user)
-    return user
-
-
-def customer_login_data():
-    """Returns a dictionary with valid login data for a customer user."""
+def user_login_data():
+    """Returns a dictionary with valid login data for user."""
 
     data = {
-        "username": CUSTOMER_USER_DATA["username"],
-        "password": CUSTOMER_USER_DATA["password"],
+        "username": USER_DATA["username"],
+        "password": USER_DATA["password"],
     }
     return data
 
 
-def business_login_data():
-    """Returns a dictionary with valid login data for a business user."""
+def fill_database_with_users():
+    """Fills the database with multiple users for testing purposes."""
 
-    data = {
-        "username": BUSINESS_USER_DATA["username"],
-        "password": BUSINESS_USER_DATA["password"],
-    }
-    return data
+    for i in range(1, 2):
+        create_user(
+            username=f"exampleCustomUsername{i}",
+            email=f"exampleCustom{i}@mail.de",
+            type="customer",
+        )
+
+        create_user(
+            username=f"exampleBusinessUsername{i}",
+            email=f"examplebusiness{i}@mail.de",
+            type="business",
+        )

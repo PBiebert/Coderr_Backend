@@ -3,7 +3,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
-from tests_helpers.users import customer_registration_data
+from tests_helpers.users import user_registration_data
 
 User = get_user_model()
 
@@ -14,7 +14,7 @@ class RegistrationAPITests(APITestCase):
         """
         Set up valid user data for testing
         """
-        self.valid_user_data = customer_registration_data()
+        self.valid_user_data = user_registration_data()
         self.url = reverse("registration")
 
     def test_user_can_be_created(self):
