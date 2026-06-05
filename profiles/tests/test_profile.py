@@ -39,6 +39,7 @@ class ProfileAPITests(APITestCase):
         response = self.client.get(self.url_with_invalid_pk)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    # wird ersetzt durch
     def test_get_profile_returns_expected_response(self):
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
@@ -56,10 +57,32 @@ class ProfileAPITests(APITestCase):
             "working_hours": self.valid_business_user.profile.working_hours,
             "type": self.valid_business_user.type,
             "email": self.valid_business_user.email,
-            "created_at": response.data,
+            "created_at": self.valid_business_user.profile.created_at.strftime(
+                "%Y-%m-%dT%H:%M:%SZ"
+            ),
         }
 
         print(f"valid_response{valid_response}")
         print(f"")
         print(f"response{response.data}")
         self.assertEqual(response.data, valid_response)
+
+    def test_get_profile_response_has_expected_structure(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
+        response = self.client.get(self.url_with_valid_pk)
+
+        expected_keys = {
+            "user",
+            "username",
+            "first_name",
+            "last_name",
+            "file",
+            "location",
+            "tel",
+            "description",
+            "working_hours",
+            "type",
+            "email",
+            "created_at",
+        }
+        self.assertEqual(set(response.data.keys()), expected_keys)

@@ -8,7 +8,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source="user.last_name")
     email = serializers.EmailField(source="user.email")
     type = serializers.CharField(source="user.type", read_only=True)
-    created_at = serializers.DateTimeField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
 
     class Meta:
         model = Profile
