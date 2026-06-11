@@ -26,8 +26,8 @@ class RegistrationAPITests(APITestCase):
 
         user = User.objects.create_user(**self.valid_user_data)
 
-        self.assertEqual(user.username, "exampleCustomerUsername")
-        self.assertEqual(user.email, "exampleCustomer@mail.de")
+        self.assertEqual(user.username, "exampleUsername")
+        self.assertEqual(user.email, "example@mail.de")
         self.assertEqual(user.type, "customer")
 
     def test_registration_with_valid_data_return_201(self):
