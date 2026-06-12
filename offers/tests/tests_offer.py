@@ -48,3 +48,19 @@ class OfferApiTests(APITestCase):
         invalid_data["details"][0]["offer_type"] = "standard"
         response = self.client.post(self.url, data=invalid_data, format="json")
         self.assertEqual(response.status_code, 400)
+
+    def test_post_offer_is_not_authenticated_return_401(self):
+        """Test that trying to create an offer without authentication returns a 401 response"""
+
+        response = self.client.post(self.url, data=offer_data(), format="json")
+        self.assertEqual(response.status_code, 401)
+
+    def test_post_offer_is_not_business_user_return_403(self):
+        """Test that trying to create an offer with a non-business user returns a 403 response"""
+
+        customer = create_user(username="customer_user", type="customer")
+        token, created = Token.objects.get_or_create(user=customer)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+
+        response = self.client.post(self.url, data=offer_data(), format="json")
+        self.assertEqual(response.status_code, 403)
