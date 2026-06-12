@@ -1,8 +1,9 @@
 from rest_framework.test import APITestCase
 from tests_helpers.users import create_user
-from tests_helpers.offers import offer_data
+from tests_helpers.offers import offer_data, create_offer
 from rest_framework.authtoken.models import Token
 from django.urls import reverse
+from offers.models import Offer
 
 
 class OfferApiTests(APITestCase):
@@ -64,3 +65,11 @@ class OfferApiTests(APITestCase):
 
         response = self.client.post(self.url, data=offer_data(), format="json")
         self.assertEqual(response.status_code, 403)
+
+    def test_get_offers_return_200(self):
+        """Test that a business user can retrieve offers and receives a 200 response"""
+
+        create_offer(self.valid_business_user, offer_data())
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
+        response = self.client.get(self.url, format="json")
+        self.assertEqual(response.status_code, 200)

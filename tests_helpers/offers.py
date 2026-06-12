@@ -1,3 +1,6 @@
+from .users import create_user
+from offers.models import Offer, OfferDetail
+
 OFFER_DETAILS_BASIC = {
     "title": "Basic Design",
     "revisions": 2,
@@ -36,3 +39,14 @@ def offer_data():
     """Returns a dictionary with valid data for creating an offer."""
 
     return OFFER_DATA.copy()
+
+
+def create_offer(business_user, offer_data):
+    """Creates an offer with the given data and returns the created offer instance."""
+
+    details = offer_data.pop("details")
+    offer = Offer.objects.create(user=business_user, **offer_data)
+    for detail in details:
+        OfferDetail.objects.create(offer=offer, **detail)
+
+    return offer
