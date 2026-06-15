@@ -1,8 +1,11 @@
 from rest_framework import serializers
 from offers.models import Offer, OfferDetail
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
-class OfferDetailSerializer(serializers.ModelSerializer):
+class OfferCreateDetailSerializer(serializers.ModelSerializer):
     """Serializer for the OfferDetail model."""
 
     price = serializers.DecimalField(
@@ -22,10 +25,10 @@ class OfferDetailSerializer(serializers.ModelSerializer):
         ]
 
 
-class OfferSerializer(serializers.ModelSerializer):
+class OfferCreateSerializer(serializers.ModelSerializer):
     """Serializer for the Offer model, including nested details."""
 
-    details = OfferDetailSerializer(many=True)
+    details = OfferCreateDetailSerializer(many=True)
 
     class Meta:
         model = Offer
@@ -64,3 +67,55 @@ class OfferSerializer(serializers.ModelSerializer):
             OfferDetail.objects.create(offer=offer, **detail)
 
         return offer
+
+
+class OfferDetailsListSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OfferDetail
+        fields = ["id", "url"]
+
+    def get_url(self, obj):
+        return f"/offerdetails/{obj.id}/"
+
+
+class userDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "username"]
+
+
+class OfferListSerializer(serializers.ModelSerializer):
+    """Serializer for listing offers without nested details."""
+
+    created_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
+    updated_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
+    details = OfferDetailsListSerializer(many=True, read_only=True)
+    user_details = userDetailsSerializer(source="user", read_only=True)
+    min_price = serializers.SerializerMethodField()
+    min_delivery_time = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Offer
+        fields = [
+            "id",
+            "user",
+            "title",
+            "image",
+            "description",
+            "created_at",
+            "updated_at",
+            "details",
+            "min_price",
+            "min_delivery_time",
+            "user_details",
+        ]
+
+    def get_min_price(self, obj):
+        """Calculate the minimum price from the related details."""
+
+        return min(detail.price for detail in obj.details.all())
+
+    def get_min_delivery_time(self, obj):
+        return min(detail.delivery_time_in_days for detail in obj.details.all())

@@ -4,6 +4,7 @@ from tests_helpers.offers import offer_data, create_offer
 from rest_framework.authtoken.models import Token
 from django.urls import reverse
 from offers.models import Offer
+from rest_framework import status
 
 
 class OfferApiTests(APITestCase):
@@ -19,7 +20,7 @@ class OfferApiTests(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
 
         response = self.client.post(self.url, data=offer_data(), format="json")
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_post_offer_without_title_return_400(self):
         """Test that trying to create an offer without a title returns a 400 response"""
@@ -30,7 +31,7 @@ class OfferApiTests(APITestCase):
         invalid_data.pop("title")
 
         response = self.client.post(self.url, data=invalid_data, format="json")
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_offer_with_two_details_return_400(self):
         """Test that trying to create an offer with two details returns a 400 response"""
@@ -39,7 +40,7 @@ class OfferApiTests(APITestCase):
         invalid_data = offer_data()
         invalid_data["details"].pop()
         response = self.client.post(self.url, data=invalid_data, format="json")
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_offer_with_duplicate_offer_types_return_400(self):
         """Test that trying to create an offer with duplicate offer types returns a 400 response"""
@@ -48,13 +49,13 @@ class OfferApiTests(APITestCase):
         invalid_data = offer_data()
         invalid_data["details"][0]["offer_type"] = "standard"
         response = self.client.post(self.url, data=invalid_data, format="json")
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_offer_is_not_authenticated_return_401(self):
         """Test that trying to create an offer without authentication returns a 401 response"""
 
         response = self.client.post(self.url, data=offer_data(), format="json")
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_post_offer_is_not_business_user_return_403(self):
         """Test that trying to create an offer with a non-business user returns a 403 response"""
@@ -64,12 +65,56 @@ class OfferApiTests(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
 
         response = self.client.post(self.url, data=offer_data(), format="json")
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_offers_return_200(self):
         """Test that a business user can retrieve offers and receives a 200 response"""
 
         create_offer(self.valid_business_user, offer_data())
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
         response = self.client.get(self.url, format="json")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_offers_returns_paginated_response(self):
+        create_offer(self.valid_business_user, offer_data())
+        response = self.client.get(self.url, format="json")
+
+        print(response.data)
+        self.assertIn("count", response.data)
+        self.assertIn("next", response.data)
+        self.assertIn("previous", response.data)
+        self.assertIn("results", response.data)
+
+        self.assertIsInstance(response.data["results"], list)
+
+    def test_get_offers_valid_response_structure(self):
+        create_offer(self.valid_business_user, offer_data())
+        response = self.client.get(self.url, format="json")
+
+        offer = response.data["results"][0]
+        expected_offer_keys = {
+            "id",
+            "user",
+            "title",
+            "image",
+            "description",
+            "created_at",
+            "updated_at",
+            "details",
+            "min_price",
+            "min_delivery_time",
+            "user_details",
+        }
+
+        expected_details_keys = {"id", "url"}
+        expected_user_details_keys = {"first_name", "last_name", "username"}
+
+        self.assertIn("details", offer)
+        self.assertIn("user_details", offer)
+        self.assertEqual(set(offer.keys()), expected_offer_keys)
+        self.assertEqual(set(offer["details"][0].keys()), expected_details_keys)
+        self.assertEqual(set(offer["user_details"].keys()), expected_user_details_keys)
+
+    def test_get_offers_with_invalid_url_return_404(self):
+        invalid_url = f"{self.url}?page=2"
+        response = self.client.get(invalid_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
