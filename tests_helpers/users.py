@@ -5,25 +5,23 @@ from rest_framework.test import APIClient
 
 User = get_user_model()
 
-USER_DATA = {
-    "username": "exampleUsername",
-    "email": "example@mail.de",
-    "password": "examplePassword",
-    "repeated_password": "examplePassword",
-    "type": "customer",
-}
-
 
 def user_registration_data():
     """Returns a dictionary with valid registration data for a user."""
 
-    return USER_DATA.copy()
+    return {
+        "username": "exampleUsername",
+        "email": "example@mail.de",
+        "password": "examplePassword",
+        "repeated_password": "examplePassword",
+        "type": "customer",
+    }
 
 
 def create_user(**kwargs):
     """Creates and returns a user with a profile."""
 
-    data = USER_DATA.copy()
+    data = user_registration_data()
     data.update(kwargs)
     data.pop("repeated_password")
     user = User.objects.create_user(**data)
@@ -35,8 +33,8 @@ def user_login_data():
     """Returns a dictionary with valid login data for user."""
 
     data = {
-        "username": USER_DATA["username"],
-        "password": USER_DATA["password"],
+        "username": "exampleUsername",
+        "password": "examplePassword",
     }
     return data
 

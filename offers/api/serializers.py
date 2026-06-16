@@ -69,7 +69,7 @@ class OfferCreateSerializer(serializers.ModelSerializer):
         return offer
 
 
-class OfferDetailsListSerializer(serializers.ModelSerializer):
+class OfferDetailRefUrlSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     class Meta:
@@ -80,19 +80,28 @@ class OfferDetailsListSerializer(serializers.ModelSerializer):
         return f"/offerdetails/{obj.id}/"
 
 
-class userDetailsSerializer(serializers.ModelSerializer):
+class OfferDetailAbsUrlSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OfferDetail
+        fields = ["id", "url"]
+
+    def get_url(self, obj):
+        request = self.context.get("request")
+        return request.build_absolute_uri(f"/api/offers/details/{obj.id}/")
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "username"]
 
 
-class OfferListSerializer(serializers.ModelSerializer):
-    """Serializer for listing offers without nested details."""
-
+class BaseOfferSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
     updated_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
-    details = OfferDetailsListSerializer(many=True, read_only=True)
-    user_details = userDetailsSerializer(source="user", read_only=True)
+    details = OfferDetailRefUrlSerializer(many=True, read_only=True)
     min_price = serializers.SerializerMethodField()
     min_delivery_time = serializers.SerializerMethodField()
 
@@ -109,13 +118,61 @@ class OfferListSerializer(serializers.ModelSerializer):
             "details",
             "min_price",
             "min_delivery_time",
-            "user_details",
         ]
 
     def get_min_price(self, obj):
-        """Calculate the minimum price from the related details."""
 
         return min(detail.price for detail in obj.details.all())
 
     def get_min_delivery_time(self, obj):
         return min(detail.delivery_time_in_days for detail in obj.details.all())
+
+
+class OfferListSerializer(BaseOfferSerializer):
+
+    user_details = UserDetailsSerializer(source="user", read_only=True)
+
+    class Meta(BaseOfferSerializer.Meta):
+        fields = BaseOfferSerializer.Meta.fields + ["user_details"]
+
+
+class OfferDetailSerializer(BaseOfferSerializer):
+    details = OfferDetailAbsUrlSerializer(many=True, read_only=True)
+
+
+class OfferUpdateSerializer(serializers.ModelSerializer):
+    details = OfferCreateDetailSerializer(many=True)
+
+    class Meta:
+        model = Offer
+        fields = ["id", "title", "image", "description", "details"]
+
+    def update(self, instance, validated_data):
+        """Update an offer and its related details."""
+
+        details_data = validated_data.pop("details")
+
+        instance.title = validated_data.get("title", instance.title)
+        instance.image = validated_data.get("image", instance.image)
+        instance.description = validated_data.get("description", instance.description)
+        instance.save()
+
+        for detail in details_data:
+            offer_type = detail.get("offer_type")
+            if offer_type:
+                offer_detail = OfferDetail.objects.get(
+                    offer_type=offer_type, offer=instance
+                )
+                offer_detail.title = detail.get("title", offer_detail.title)
+                offer_detail.revisions = detail.get("revisions", offer_detail.revisions)
+                offer_detail.delivery_time_in_days = detail.get(
+                    "delivery_time_in_days", offer_detail.delivery_time_in_days
+                )
+                offer_detail.price = detail.get("price", offer_detail.price)
+                offer_detail.features = detail.get("features", offer_detail.features)
+                offer_detail.offer_type = detail.get(
+                    "offer_type", offer_detail.offer_type
+                )
+                offer_detail.save()
+
+        return instance

@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from rest_framework import generics
 from offers.models import Offer
-from .serializers import OfferCreateSerializer, OfferListSerializer
-from .premissions import IsBusinessUser
+from .serializers import (
+    OfferCreateSerializer,
+    OfferListSerializer,
+    OfferDetailSerializer,
+    OfferUpdateSerializer,
+)
+from .premissions import IsBusinessUser, IsOwner
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .pagination import StandardOfferResultsPagination
 from django_filters.rest_framework import DjangoFilterBackend
@@ -28,3 +33,19 @@ class OfferAPIView(generics.ListCreateAPIView):
         if self.request.method == "GET":
             return [AllowAny()]
         return [IsAuthenticated(), IsBusinessUser()]
+
+
+class OfferDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Offer.objects.all()
+    serializer_class = OfferDetailSerializer
+    http_method_names = ["get", "patch", "delete", "head", "options"]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [IsAuthenticated()]
+        return [IsAuthenticated(), IsOwner()]
+
+    def get_serializer_class(self):
+        if self.request.method in ["PATCH"]:
+            return OfferUpdateSerializer
+        return OfferDetailSerializer
