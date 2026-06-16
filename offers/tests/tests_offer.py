@@ -118,3 +118,10 @@ class OfferApiTests(APITestCase):
         invalid_url = f"{self.url}?page=2"
         response = self.client.get(invalid_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_offers_with_search_query_return_200(self):
+        create_offer(self.valid_business_user, offer_data(title="Special Offer"))
+        search_url = f"{self.url}?search=Special"
+        response = self.client.get(search_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreater(len(response.data["results"]), 0)

@@ -35,10 +35,12 @@ OFFER_DATA = {
 }
 
 
-def offer_data():
-    """Returns a dictionary with valid data for creating an offer."""
+def offer_data(**kwargs):
+    """Returns a dictionary with default offer data, which can be overridden by passing keyword arguments."""
 
-    return OFFER_DATA.copy()
+    data = OFFER_DATA.copy()
+    data.update(kwargs)
+    return data
 
 
 def create_offer(business_user, offer_data):
