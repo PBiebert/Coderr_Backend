@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.db.models import Min
 from rest_framework import generics
 from offers.models import Offer
 from .serializers import (
@@ -23,6 +23,9 @@ class OfferAPIView(generics.ListCreateAPIView):
     ordering = ["-updated_at"]
     filterset_class = OfferFilter
     search_fields = ["title", "description"]
+
+    def get_queryset(self):
+        return Offer.objects.all().annotate(min_price=Min("details__price"))
 
     def get_serializer_class(self):
         if self.request.method == "POST":
