@@ -11,7 +11,7 @@ class OfferDetailsApiTests(APITestCase):
         self.valid_user = create_user()
         self.token, created = Token.objects.get_or_create(user=self.valid_user)
         self.offer = create_offer(self.valid_user, offer_data())
-        self.valid_url = reverse("offers_details", kwargs={"pk": self.offer.id})
+        self.valid_url = reverse("offers-details", kwargs={"pk": self.offer.id})
 
     def test_get_offer_details_return_200(self):
         """Test that a user can retrieve offer details with a 200 response"""
@@ -57,7 +57,7 @@ class OfferDetailsApiTests(APITestCase):
         """Test that retrieving details of a non-existent offer returns a 404 response"""
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
-        invalid_url = reverse("offers_details", kwargs={"pk": 9999})
+        invalid_url = reverse("offers-details", kwargs={"pk": 9999})
         response = self.client.get(invalid_url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -87,7 +87,7 @@ class OfferDetailsApiTests(APITestCase):
         """Test that deleting a non-existent offer returns a 404 response"""
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
-        invalid_url = reverse("offers_details", kwargs={"pk": 99})
+        invalid_url = reverse("offers-details", kwargs={"pk": 99})
         response = self.client.delete(invalid_url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -136,7 +136,7 @@ class OfferDetailsApiTests(APITestCase):
         """Test that updating a non-existent offer returns a 404 response"""
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
-        invalid_url = reverse("offers_details", kwargs={"pk": 99})
+        invalid_url = reverse("offers-details", kwargs={"pk": 99})
         updated_data = offer_data(title="Updated Grafikdesign-Paket")
         response = self.client.patch(invalid_url, updated_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

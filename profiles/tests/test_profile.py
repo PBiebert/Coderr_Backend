@@ -14,13 +14,13 @@ class ProfileAPITests(APITestCase):
         self.token, created = Token.objects.get_or_create(user=self.valid_business_user)
         self.update_data = profile_update_data()
         self.url_with_valid_pk = reverse(
-            "profile_details", kwargs={"pk": self.valid_business_user.id}
+            "profile-details", kwargs={"pk": self.valid_business_user.id}
         )
         self.url_with_invalid_pk = reverse(
-            "profile_details", kwargs={"pk": self.valid_business_user.id + 99}
+            "profile-details", kwargs={"pk": self.valid_business_user.id + 99}
         )
-        self.url_business = reverse("business_profiles")
-        self.url_customer = reverse("customer_profiles")
+        self.url_business = reverse("business-profiles")
+        self.url_customer = reverse("customer-profiles")
 
     def test_created_user_has_profile_with_default_values(self):
         """Test that a profile is automatically created for a new user and has default values"""

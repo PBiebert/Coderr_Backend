@@ -15,7 +15,6 @@ class OfferSingleDetailApiTests(APITestCase):
         self.valid_url = reverse("offers_single_detail", kwargs={"pk": self.detail.id})
 
     def test_get_offer_single_detail_return_200(self):
-        print(self.detail)
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
         response = self.client.get(self.valid_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
