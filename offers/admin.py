@@ -8,7 +8,7 @@ class OfferAdmin(admin.ModelAdmin):
 
 class OfferDetailAdmin(admin.ModelAdmin):
     list_display = (
-        "offer",
+        "id",
         "title",
         "revisions",
         "delivery_time_in_days",

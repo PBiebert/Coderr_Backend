@@ -151,11 +151,11 @@ class OfferApiTests(APITestCase):
         response = self.client.get(ordering_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # def test_get_offers_with_ordering_by_min_price_return_200(self):
-    #     create_offer(self.valid_business_user, offer_data(min_price=100))
-    #     ordering_url = f"{self.url}?ordering=min_price"
-    #     response = self.client.get(ordering_url, format="json")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_get_offers_with_ordering_by_min_price_return_200(self):
+        create_offer(self.valid_business_user, offer_data())
+        ordering_url = f"{self.url}?ordering=min_price"
+        response = self.client.get(ordering_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_search_by_title_return_200(self):
         create_offer(self.valid_business_user, offer_data(title="Grafikdesign-Paket"))

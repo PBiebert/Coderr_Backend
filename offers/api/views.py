@@ -1,11 +1,12 @@
 from django.db.models import Min
 from rest_framework import generics
-from offers.models import Offer
+from offers.models import Offer, OfferDetail
 from .serializers import (
     OfferCreateSerializer,
     OfferListSerializer,
     OfferDetailSerializer,
     OfferUpdateSerializer,
+    OfferSingleDetailSerializer,
 )
 from .premissions import IsBusinessUser, IsOwner
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -39,9 +40,11 @@ class OfferAPIView(generics.ListCreateAPIView):
 
 
 class OfferDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Offer.objects.all()
     serializer_class = OfferDetailSerializer
     http_method_names = ["get", "patch", "delete", "head", "options"]
+
+    def get_queryset(self):
+        return Offer.objects.all().annotate(min_price=Min("details__price"))
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -52,3 +55,9 @@ class OfferDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ["PATCH"]:
             return OfferUpdateSerializer
         return OfferDetailSerializer
+
+
+class OfferSingleDetailAPIView(generics.RetrieveAPIView):
+    queryset = OfferDetail.objects.all()
+    serializer_class = OfferSingleDetailSerializer
+    permission_classes = [IsAuthenticated]

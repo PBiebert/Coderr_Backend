@@ -102,7 +102,6 @@ class BaseOfferSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
     updated_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
     details = OfferDetailRefUrlSerializer(many=True, read_only=True)
-    # min_price = serializers.SerializerMethodField()
     min_price = serializers.DecimalField(
         max_digits=10, decimal_places=2, coerce_to_string=False
     )
@@ -122,9 +121,6 @@ class BaseOfferSerializer(serializers.ModelSerializer):
             "min_price",
             "min_delivery_time",
         ]
-
-    # def get_min_price(self, obj):
-    #     return min(detail.price for detail in obj.details.all())
 
     def get_min_delivery_time(self, obj):
         return min(detail.delivery_time_in_days for detail in obj.details.all())
@@ -178,3 +174,17 @@ class OfferUpdateSerializer(serializers.ModelSerializer):
                 offer_detail.save()
 
         return instance
+
+
+class OfferSingleDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OfferDetail
+        fields = [
+            "id",
+            "title",
+            "revisions",
+            "delivery_time_in_days",
+            "price",
+            "features",
+            "offer_type",
+        ]
