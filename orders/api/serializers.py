@@ -5,6 +5,9 @@ from rest_framework.exceptions import NotFound
 
 
 class OfferCreateSerializer(serializers.Serializer):
+    """Serializer for creating an order based on an offer detail. It includes a write-only field
+    for the offer_detail_id and read-only fields for the order details."""
+
     offer_detail_id = serializers.IntegerField(write_only=True)
 
     id = serializers.IntegerField(read_only=True)
@@ -21,6 +24,9 @@ class OfferCreateSerializer(serializers.Serializer):
     updated_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
 
     def create(self, validated_data):
+        """Serializer for creating an order based on an offer detail.
+        It creates a snapshot of the offer details using the offer_detail_id."""
+
         offer_detail_id = validated_data.get("offer_detail_id")
 
         try:
@@ -43,6 +49,8 @@ class OfferCreateSerializer(serializers.Serializer):
 
 
 class OrderListSerializer(serializers.ModelSerializer):
+    """Serializer for listing orders. It includes all fields of the Order model."""
+
     class Meta:
         model = Order
         fields = "__all__"
