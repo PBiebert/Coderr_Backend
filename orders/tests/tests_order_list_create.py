@@ -20,7 +20,7 @@ class OrderListCreateAPIViewTestCase(APITestCase):
         self.business_token = Token.objects.create(user=self.business_user)
 
         self.offer = create_offer(self.business_user, offer_data())
-        self.url = reverse("order-list-create")
+        self.url = reverse("order-list")
 
     def test_create_order_as_customer_returns_201(self):
         """Test that a customer can create an order and receives a 201 response"""

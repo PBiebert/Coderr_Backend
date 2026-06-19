@@ -12,6 +12,8 @@ class OrderAdmin(admin.ModelAdmin):
         "status",
     )
 
+    readonly_fields = ("created_at", "updated_at")
+
     def __str__(self):
         return (
             f"Title: {self.title},Erstellt am: {self.created_at},Status: {self.status}"

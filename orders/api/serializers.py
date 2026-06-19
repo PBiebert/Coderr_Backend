@@ -54,3 +54,22 @@ class OrderListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"
+
+
+class OrderDetailUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for updating order details. It includes all fields of the Order model, but only allows updates to specific fields."""
+
+    class Meta:
+        model = Order
+        fields = ["status"]
+
+    def validate(self, attrs):
+        """Ensure that only the 'status' field can be updated."""
+
+        if set(self.initial_data) - {"status"}:
+            raise serializers.ValidationError("Only the 'status' field can be updated.")
+
+        if not set(self.initial_data):
+            raise serializers.ValidationError("The 'status' field is required.")
+
+        return attrs

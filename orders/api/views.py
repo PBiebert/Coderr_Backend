@@ -1,8 +1,12 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsCustomUser
+from .permissions import IsCustomUser, IsBusinessUser
 from orders.models import Order
-from .serializers import OfferCreateSerializer, OrderListSerializer
+from .serializers import (
+    OfferCreateSerializer,
+    OrderListSerializer,
+    OrderDetailUpdateSerializer,
+)
 from django.db.models import Q
 
 
@@ -29,3 +33,12 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
         if self.request.method == "POST":
             return [IsAuthenticated(), IsCustomUser()]
         return [IsAuthenticated()]
+
+
+class OrderDetailPatchDeleteViewSet(
+    mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet
+):
+
+    queryset = Order.objects.all()
+    serializer_class = OrderDetailUpdateSerializer
+    permission_classes = [IsAuthenticated, IsBusinessUser]
