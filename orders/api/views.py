@@ -51,11 +51,27 @@ class OrderCountAPIView(APIView):
 
     def get(self, request, pk):
         """Return the count of in-progress orders for a specific business user."""
+
         if pk in Order.objects.values_list("business_user_id", flat=True):
             count = Order.objects.filter(
                 business_user_id=pk, status="in_progress"
             ).count()
             return Response({"order_count": count})
+        return Response(
+            {"detail": "Business user not found."}, status=status.HTTP_404_NOT_FOUND
+        )
+
+
+class CompleteOrderCountAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        """Return the count of in-progress orders for a specific business user."""
+        if pk in Order.objects.values_list("business_user_id", flat=True):
+            count = Order.objects.filter(
+                business_user_id=pk, status="completed"
+            ).count()
+            return Response({"completed": count})
         return Response(
             {"detail": "Business user not found."}, status=status.HTTP_404_NOT_FOUND
         )
