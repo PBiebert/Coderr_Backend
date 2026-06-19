@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "profiles.apps.ProfilesConfig",
     "offers.apps.OffersConfig",
     "orders.apps.OrdersConfig",
+    "reviews.apps.ReviewsConfig",
 ]
 
 MIDDLEWARE = [
