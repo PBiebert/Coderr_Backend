@@ -14,12 +14,12 @@ class OrderCountAPIViewTestCase(APITestCase):
         self.custom_token = Token.objects.create(user=self.custom_user)
 
         self.business_user_1 = create_user(
-            username="exampleBusinessUsername_1", type="business"
+            username="exampleBusiness_1", type="business"
         )
         self.business_token_1 = Token.objects.create(user=self.business_user_1)
 
         self.business_user_2 = create_user(
-            username="exampleBusinessUsername_2", type="business"
+            username="exampleBusiness_2", type="business"
         )
         self.business_token_2 = Token.objects.create(user=self.business_user_2)
 
@@ -65,9 +65,7 @@ class OrderCountAPIViewTestCase(APITestCase):
         self.custom_user = create_user()
         self.custom_token = Token.objects.create(user=self.custom_user)
 
-        self.business_user = create_user(
-            username="exampleBusinessUsername", type="business"
-        )
+        self.business_user = create_user(username="exampleBusiness", type="business")
         self.business_token = Token.objects.create(user=self.business_user)
 
         for order in range(3):

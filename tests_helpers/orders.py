@@ -13,7 +13,7 @@ def order_data(customer_user, business_user, **kwargs):
         "price": 150,
         "features": [
             "Logo Design",
-            "Visitenkarten",
+            "Business Cards",
         ],
         "offer_type": "basic",
         "status": "in_progress",

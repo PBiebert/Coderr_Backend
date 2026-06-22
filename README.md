@@ -1,10 +1,9 @@
 # Coderr – Backend
 
-> Kanban-based project management tool | REST API built with Django & Django
-> REST Framework
+> Freelancer platform API | REST API built with Django & Django REST Framework
 
-Coderr is a platform for freelance developers where clients can post projects
-and developers can offer their services. This repository contains **the backend only**,
+Coderr is a platform for freelance developers where customers can post requests
+and business users can offer their services. This repository contains **the backend only**,
 which provides all data and business logic through a REST API. The corresponding
 frontend communicates with this backend via these endpoints.
 
@@ -34,7 +33,7 @@ frontend communicates with this backend via these endpoints.
 
    ```bash
    git clone <repo-url>
-   cd Codere_Backend
+   cd Coderr_Backend
    ```
 
 2. Create and activate a virtual environment:
@@ -97,8 +96,16 @@ frontend communicates with this backend via these endpoints.
 ├── core/               # Django project configuration (settings, urls, wsgi)
 ├── accounts/           # User management & authentication
 │   └── api/            # Serializers, views, URLs for accounts
-├── coderr/             # Core logic: boards, columns, tasks
-│   └── api/            # Serializers, views, URLs for kan_mind
+├── profiles/           # Profile management
+│   └── api/            # Serializers, views, URLs for profiles
+├── offers/             # Offer management
+│   └── api/            # Serializers, views, URLs for offers
+├── orders/             # Order management
+│   └── api/            # Serializers, views, URLs for orders
+├── order_statistics/   # Cross-cutting order statistics endpoints
+│   └── api/            # Serializers, views, URLs for statistics
+├── reviews/            # Review management
+│   └── api/            # Serializers, views, URLs for reviews
 ├── manage.py
 └── requirements.txt
 ```
@@ -110,14 +117,58 @@ frontend communicates with this backend via these endpoints.
 > For full endpoint documentation including request/response examples, status
 > codes and permissions, see [docs/api.md](docs/api.md).
 
-### Auth
+### Authentication
 
-| Method | Endpoint                      | Description                     | Auth required | Access         |
-| ------ | ----------------------------- | ------------------------------- | ------------- | -------------- |
-| POST   | `-`                           | -                               | No            | All            |
+| Method | Endpoint            | Description         | Auth required | Access |
+| ------ | ------------------- | ------------------- | ------------- | ------ |
+| POST   | `/api/registration/` | Register a new user | No            | All    |
+| POST   | `/api/login/`        | Log in a user       | No            | All    |
 
+### Profile
 
+| Method | Endpoint                   | Description                        | Auth required | Access           |
+| ------ | -------------------------- | ---------------------------------- | ------------- | ---------------- |
+| GET    | `/api/profile/{pk}/`       | Retrieve one profile               | Yes           | Logged-in user   |
+| PATCH  | `/api/profile/{pk}/`       | Update one profile                 | Yes           | Profile owner    |
+| GET    | `/api/profiles/business/`  | List all business profiles         | Yes           | Logged-in user   |
+| GET    | `/api/profiles/customer/`  | List all customer profiles         | Yes           | Logged-in user   |
 
+### Offers
+
+| Method | Endpoint                | Description                 | Auth required | Access                     |
+| ------ | ----------------------- | --------------------------- | ------------- | -------------------------- |
+| GET    | `/api/offers/`          | List all offers             | No            | All                        |
+| POST   | `/api/offers/`          | Create a new offer          | Yes           | Business user              |
+| GET    | `/api/offers/{id}/`     | Retrieve one offer          | Yes           | Logged-in user             |
+| PATCH  | `/api/offers/{id}/`     | Update one offer            | Yes           | Offer owner                |
+| DELETE | `/api/offers/{id}/`     | Delete one offer            | Yes           | Offer owner                |
+| GET    | `/api/offerdetails/{id}/` | Retrieve one offer detail | Yes           | Logged-in user             |
+
+### Orders
+
+| Method | Endpoint                                | Description                                | Auth required | Access                  |
+| ------ | --------------------------------------- | ------------------------------------------ | ------------- | ----------------------- |
+| GET    | `/api/orders/`                          | List user-related orders                   | Yes           | Logged-in user          |
+| POST   | `/api/orders/`                          | Create a new order                         | Yes           | Customer user           |
+| PATCH  | `/api/orders/{id}/`                     | Update one order                           | Yes           | Business user           |
+| DELETE | `/api/orders/{id}/`                     | Delete one order                           | Yes           | Business user           |
+| GET    | `/api/order-count/{business_user_id}/`  | Count in-progress orders of a business user| Yes           | Logged-in user          |
+| GET    | `/api/completed-order-count/{business_user_id}/` | Count completed orders of a business user | Yes      | Logged-in user          |
+
+### Reviews
+
+| Method | Endpoint              | Description            | Auth required | Access         |
+| ------ | --------------------- | ---------------------- | ------------- | -------------- |
+| GET    | `/api/reviews/`       | List all reviews       | Yes           | Logged-in user |
+| POST   | `/api/reviews/`       | Create a review        | Yes           | Logged-in user |
+| PATCH  | `/api/reviews/{id}/`  | Update a review        | Yes           | Review author  |
+| DELETE | `/api/reviews/{id}/`  | Delete a review        | Yes           | Review author  |
+
+### Cross-cutting Endpoints
+
+| Method | Endpoint          | Description                                 | Auth required | Access |
+| ------ | ----------------- | ------------------------------------------- | ------------- | ------ |
+| GET    | `/api/base-info/` | Aggregated platform information for Coderr | No            | All    |
 
 ---
 
@@ -132,4 +183,4 @@ The corresponding frontend repository can be found here:
 ## Author
 
 **Philipp Biebert**  
-Project status: 
+Project status: 22.06.2026 (in progress)

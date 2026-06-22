@@ -1,19 +1,18 @@
 from offers.models import Offer, OfferDetail
-from copy import deepcopy
 
 
 def offer_data(**kwargs):
     return {
-        "title": "Grafikdesign-Paket",
+        "title": "Graphic Design Package",
         "image": None,
-        "description": "Ein umfassendes Grafikdesign-Paket für Unternehmen.",
+        "description": "A comprehensive graphic design package for businesses.",
         "details": [
             {
                 "title": "Basic Design",
                 "revisions": 2,
                 "delivery_time_in_days": 5,
                 "price": 100,
-                "features": ["Logo Design", "Visitenkarte"],
+                "features": ["Logo Design", "Business Card"],
                 "offer_type": "basic",
             },
             {
@@ -21,7 +20,7 @@ def offer_data(**kwargs):
                 "revisions": 5,
                 "delivery_time_in_days": 7,
                 "price": 200,
-                "features": ["Logo Design", "Visitenkarte", "Briefpapier"],
+                "features": ["Logo Design", "Business Card", "Letterhead"],
                 "offer_type": "standard",
             },
             {
@@ -29,7 +28,7 @@ def offer_data(**kwargs):
                 "revisions": 10,
                 "delivery_time_in_days": 10,
                 "price": 500,
-                "features": ["Logo Design", "Visitenkarte", "Briefpapier", "Flyer"],
+                "features": ["Logo Design", "Business Card", "Letterhead", "Flyer"],
                 "offer_type": "premium",
             },
         ],

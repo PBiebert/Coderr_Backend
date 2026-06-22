@@ -14,9 +14,7 @@ class OrderPatchDeleteAPIViewTestCase(APITestCase):
         self.custom_user = create_user()
         self.custom_token = Token.objects.create(user=self.custom_user)
 
-        self.business_user = create_user(
-            username="exampleBusinessUsername", type="business"
-        )
+        self.business_user = create_user(username="exampleBusiness", type="business")
         self.business_token = Token.objects.create(user=self.business_user)
 
         self.offer = create_offer(self.business_user, offer_data())
