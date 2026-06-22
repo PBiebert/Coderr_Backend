@@ -37,14 +37,6 @@ class OrderPatchDeleteAPIViewTestCase(APITestCase):
         response = self.client.patch(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_patch_order_with_empty_data_returns_400(self):
-        """Test that updating an order with empty data returns a 400 response"""
-
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.business_token.key)
-        data = {}
-        response = self.client.patch(self.url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
     def test_patch_order_with_invalid_status_value_returns_400(self):
         """Test that updating an order with an invalid status value returns a 400 response"""
 

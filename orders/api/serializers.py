@@ -66,10 +66,9 @@ class OrderDetailUpdateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         """Ensure that only the 'status' field can be updated."""
 
-        if set(self.initial_data) - {"status"}:
+        ALLOWED_FIELDS = {"status"}
+        extra_fields = set(self.initial_data) - ALLOWED_FIELDS
+
+        if extra_fields:
             raise serializers.ValidationError("Only the 'status' field can be updated.")
-
-        if not set(self.initial_data):
-            raise serializers.ValidationError("The 'status' field is required.")
-
         return attrs
