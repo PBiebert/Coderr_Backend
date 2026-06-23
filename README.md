@@ -102,7 +102,7 @@ frontend communicates with this backend via these endpoints.
 │   └── api/            # Serializers, views, URLs for offers
 ├── orders/             # Order management
 │   └── api/            # Serializers, views, URLs for orders
-├── order_statistics/   # Cross-cutting order statistics endpoints
+├── analytics/         # Cross-cutting statistics endpoints
 │   └── api/            # Serializers, views, URLs for statistics
 ├── reviews/            # Review management
 │   └── api/            # Serializers, views, URLs for reviews
