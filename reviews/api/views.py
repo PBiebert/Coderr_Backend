@@ -20,11 +20,15 @@ class ReviewApiView(generics.ListCreateAPIView):
     ordering_fields = ["updated_at", "rating"]
 
     def get_serializer_class(self):
+        """Return the appropriate serializer class based on the request method."""
+
         if self.request.method == "POST":
             return ReviewCreateSerializer
         return ReviewSerializer
 
     def get_permissions(self):
+        """Return the appropriate permissions based on the request method."""
+
         if self.request.method == "POST":
             return [IsAuthenticated(), IsCustomUser()]
         return [IsAuthenticated()]
@@ -33,6 +37,7 @@ class ReviewApiView(generics.ListCreateAPIView):
 class ReviewDetailApiView(
     mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView
 ):
+    """API view for retrieving, updating, and deleting a review instance, with appropriate permissions and serializers."""
 
     queryset = Review.objects.all()
     serializer_class = ReviewDetailSerializer

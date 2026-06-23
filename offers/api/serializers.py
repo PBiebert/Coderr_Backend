@@ -70,6 +70,8 @@ class OfferCreateSerializer(serializers.ModelSerializer):
 
 
 class OfferDetailRefUrlSerializer(serializers.ModelSerializer):
+    """Serializer for the OfferDetail model that returns a reference URL."""
+
     url = serializers.SerializerMethodField()
 
     class Meta:
@@ -77,10 +79,14 @@ class OfferDetailRefUrlSerializer(serializers.ModelSerializer):
         fields = ["id", "url"]
 
     def get_url(self, obj):
+        """Return the reference URL for the OfferDetail object."""
+
         return f"/offerdetails/{obj.id}/"
 
 
 class OfferDetailAbsUrlSerializer(serializers.ModelSerializer):
+    """Serializer for the OfferDetail model that returns an absolute URL."""
+
     url = serializers.SerializerMethodField()
 
     class Meta:
@@ -88,17 +94,23 @@ class OfferDetailAbsUrlSerializer(serializers.ModelSerializer):
         fields = ["id", "url"]
 
     def get_url(self, obj):
+        """Return the absolute URL for the OfferDetail object."""
+
         request = self.context.get("request")
         return request.build_absolute_uri(f"/api/offers/details/{obj.id}/")
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
+    """Serializer for the User model to return user details."""
+
     class Meta:
         model = User
         fields = ["first_name", "last_name", "username"]
 
 
 class BaseOfferSerializer(serializers.ModelSerializer):
+    """Base serializer for the Offer model, including common fields."""
+
     created_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
     updated_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
     details = OfferDetailRefUrlSerializer(many=True, read_only=True)
@@ -123,10 +135,13 @@ class BaseOfferSerializer(serializers.ModelSerializer):
         ]
 
     def get_min_delivery_time(self, obj):
+        """Return the minimum delivery time in days from the related OfferDetail objects."""
+
         return min(detail.delivery_time_in_days for detail in obj.details.all())
 
 
 class OfferListSerializer(BaseOfferSerializer):
+    """Serializer for listing offers, including user details."""
 
     user_details = UserDetailsSerializer(source="user", read_only=True)
 
@@ -135,10 +150,14 @@ class OfferListSerializer(BaseOfferSerializer):
 
 
 class OfferDetailSerializer(BaseOfferSerializer):
+    """Serializer for retrieving offer details, including absolute URLs for related details."""
+
     details = OfferDetailAbsUrlSerializer(many=True, read_only=True)
 
 
 class OfferUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for updating an offer and its related details."""
+
     details = OfferCreateDetailSerializer(many=True)
 
     class Meta:
@@ -177,6 +196,8 @@ class OfferUpdateSerializer(serializers.ModelSerializer):
 
 
 class OfferSingleDetailSerializer(serializers.ModelSerializer):
+    """Serializer for the OfferDetail model, including all fields."""
+
     class Meta:
         model = OfferDetail
         fields = [

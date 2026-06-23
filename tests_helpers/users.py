@@ -1,7 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework.authtoken.models import Token
 from profiles.models import Profile
-from rest_framework.test import APIClient
 
 User = get_user_model()
 

@@ -38,6 +38,8 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    """Serializer for the Review model, handling validation and serialization of review data."""
+
     class Meta:
         model = Review
         fields = "__all__"
@@ -57,6 +59,8 @@ class ReviewDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["reviewer", "business_user", "created_at", "updated_at"]
 
     def validate(self, attrs):
+        """Validation to ensure that only the 'rating' and 'description' fields can be updated."""
+
         ALLOWED_FIELDS = {"rating", "description"}
         extra_fields = set(self.initial_data) - ALLOWED_FIELDS
 

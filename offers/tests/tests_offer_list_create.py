@@ -74,6 +74,7 @@ class OfferApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_returns_paginated_response(self):
+        """Test that the GET request to retrieve offers returns a paginated response"""
         create_offer(self.valid_business_user, offer_data())
         response = self.client.get(self.url, format="json")
 
@@ -85,6 +86,8 @@ class OfferApiTests(APITestCase):
         self.assertIsInstance(response.data["results"], list)
 
     def test_get_offers_valid_response_structure(self):
+        """Test that the GET request to retrieve offers returns a response with the expected structure"""
+
         create_offer(self.valid_business_user, offer_data())
         response = self.client.get(self.url, format="json")
 
@@ -113,63 +116,85 @@ class OfferApiTests(APITestCase):
         self.assertEqual(set(offer["user_details"].keys()), expected_user_details_keys)
 
     def test_get_offers_with_invalid_url_return_404(self):
+        """Test that a GET request to an invalid URL returns a 404 response"""
+
         invalid_url = f"{self.url}?page=2"
         response = self.client.get(invalid_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_offers_with_query_param_creator_id_return_200(self):
+        """Test that a GET request with a valid creator_id query parameter returns a 200 response"""
+
         offer = create_offer(self.valid_business_user, offer_data())
         creator_id_url = f"{self.url}?creator_id={offer.user.id}"
         response = self.client.get(creator_id_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_invalid_query_param_creator_id_return_400(self):
+        """Test that a GET request with an invalid creator_id query parameter returns a 400 response"""
+
         invalid_creator_id_url = f"{self.url}?creator_id=invalid"
         response = self.client.get(invalid_creator_id_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_offers_with_query_param_min_price_return_200(self):
+        """Test that a GET request with a valid min_price query parameter returns a 200 response"""
+
         create_offer(self.valid_business_user, offer_data())
         min_price_url = f"{self.url}?min_price=200"
         response = self.client.get(min_price_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_invalid_query_param_min_price_return_400(self):
+        """Test that a GET request with an invalid min_price query parameter returns a 400 response"""
+
         invalid_min_price_url = f"{self.url}?min_price=invalid"
         response = self.client.get(invalid_min_price_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_offers_with_query_param_max_delivery_time_return_200(self):
+        """Test that a GET request with a valid max_delivery_time query parameter returns a 200 response"""
+
         create_offer(self.valid_business_user, offer_data())
         max_delivery_time_url = f"{self.url}?max_delivery_time=5"
         response = self.client.get(max_delivery_time_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_ordering_by_updated_at_return_200(self):
+        """Test that a GET request with ordering by updated_at returns a 200 response"""
+
         create_offer(self.valid_business_user, offer_data())
         ordering_url = f"{self.url}?ordering=-updated_at"
         response = self.client.get(ordering_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_ordering_by_min_price_return_200(self):
+        """Test that a GET request with ordering by min_price returns a 200 response"""
+
         create_offer(self.valid_business_user, offer_data())
         ordering_url = f"{self.url}?ordering=min_price"
         response = self.client.get(ordering_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_search_by_title_return_200(self):
+        """Test that a GET request with search by title returns a 200 response"""
+
         create_offer(self.valid_business_user, offer_data(title="Grafikdesign-Paket"))
         search_url = f"{self.url}?search=Grafikdesign-Paket"
         response = self.client.get(search_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_search_by_description_return_200(self):
+        """Test that a GET request with search by description returns a 200 response"""
+
         create_offer(self.valid_business_user, offer_data())
         search_url = f"{self.url}?search=umfassendes"
         response = self.client.get(search_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_page_size_return_200(self):
+        """Test that a GET request with a valid page_size query parameter returns a 200 response"""
+
         create_offer(self.valid_business_user, offer_data())
         page_size_url = f"{self.url}?page_size=5"
         response = self.client.get(page_size_url, format="json")

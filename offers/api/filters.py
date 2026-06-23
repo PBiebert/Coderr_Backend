@@ -3,6 +3,8 @@ from offers.models import Offer
 
 
 class OfferFilter(django_filters.FilterSet):
+    """Filter class for the Offer model."""
+
     creator_id = django_filters.NumberFilter(field_name="user__id", lookup_expr="exact")
     min_price = django_filters.NumberFilter(
         field_name="details__price", lookup_expr="gte", distinct=True

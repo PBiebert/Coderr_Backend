@@ -1,8 +1,7 @@
-from django.shortcuts import render
 from rest_framework import generics
 from profiles.models import Profile
 from .serializers import ProfileDetailSerializer, ProfileListSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from .premissions import IsOwner
 
 

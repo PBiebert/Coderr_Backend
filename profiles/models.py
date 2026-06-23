@@ -13,6 +13,3 @@ class Profile(models.Model):
     description = models.TextField(blank=True, default="")
     working_hours = models.CharField(max_length=50, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"id:{self.id}, Profile of {self.user.username}"

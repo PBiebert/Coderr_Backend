@@ -1,6 +1,5 @@
 from rest_framework.test import APITestCase
 from tests_helpers.users import create_user
-from tests_helpers.offers import offer_data, create_offer
 from tests_helpers.orders import order_data, create_order
 from rest_framework.authtoken.models import Token
 from django.urls import reverse

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -16,6 +15,8 @@ class RegistrationAPIView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        """Handle user registration and return authentication token."""
+
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             saved_account = serializer.save()
@@ -33,9 +34,13 @@ class RegistrationAPIView(APIView):
 
 
 class LoginAPIView(APIView):
+    """View for user login."""
+
     permission_classes = [AllowAny]
 
     def post(self, request):
+        """Handle user login and return authentication token."""
+
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = User.objects.get(username=serializer.validated_data["username"])

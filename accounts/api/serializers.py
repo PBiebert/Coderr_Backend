@@ -5,6 +5,7 @@ User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """Serializer for user registration."""
 
     password = serializers.CharField(write_only=True)
     repeated_password = serializers.CharField(write_only=True)
@@ -14,17 +15,22 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "email", "password", "repeated_password", "type"]
 
     def validate(self, data):
+        """Validate that the password and repeated password match."""
+
         if data["password"] != data["repeated_password"]:
             raise serializers.ValidationError("Password does not match.")
         return data
 
     def create(self, validated_data):
+        """Create a new user instance after removing the repeated password."""
+
         validated_data.pop("repeated_password")
         user = User.objects.create_user(**validated_data)
         return user
 
 
 class LoginSerializer(serializers.ModelSerializer):
+    """Serializer for user login."""
 
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -34,6 +40,8 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ["username", "password"]
 
     def validate(self, data):
+        """Validate that the user exists and the password is correct."""
+
         try:
             user = User.objects.get(username=data["username"])
         except User.DoesNotExist:

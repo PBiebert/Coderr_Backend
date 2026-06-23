@@ -21,6 +21,8 @@ class OfferDetailsApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offer_details_validate_response_data(self):
+        """Test that the response data from a GET request to retrieve offer details contains the expected fields"""
+
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
         response = self.client.get(self.valid_url)
         data = response.data

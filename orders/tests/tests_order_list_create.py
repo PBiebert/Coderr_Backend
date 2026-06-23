@@ -9,8 +9,6 @@ from rest_framework import status
 
 class OrderListCreateAPIViewTestCase(APITestCase):
     def setUp(self):
-        """Set up test data and authentication tokens for the tests"""
-
         self.custom_user = create_user()
         self.custom_token = Token.objects.create(user=self.custom_user)
 
