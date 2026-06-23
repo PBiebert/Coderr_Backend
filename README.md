@@ -79,7 +79,16 @@ frontend communicates with this backend via these endpoints.
    python manage.py migrate
    ```
 
-7. Start the development server:
+7. Run the test suite once to verify that everything is configured correctly:
+
+   ```bash
+   python manage.py test --settings=core.test_settings
+   ```
+
+   > **Important:** `core.test_settings` must be used for test execution only.
+   > Do not use these settings for normal development or production runs.
+
+8. Start the development server:
 
    ```bash
    python manage.py runserver
@@ -176,11 +185,11 @@ frontend communicates with this backend via these endpoints.
 
 The corresponding frontend repository can be found here:
 
-[Frontend Repository]()
+[Frontend Repository](#) — Coming soon
 
 ---
 
 ## Author
 
 **Philipp Biebert**  
-Project status: 22.06.2026 (in progress)
+Project status: 23.06.2026
