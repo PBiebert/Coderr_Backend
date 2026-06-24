@@ -137,7 +137,9 @@ class BaseOfferSerializer(serializers.ModelSerializer):
     def get_min_delivery_time(self, obj):
         """Return the minimum delivery time in days from the related OfferDetail objects."""
 
-        return min(detail.delivery_time_in_days for detail in obj.details.all())
+        return min(
+            (detail.delivery_time_in_days for detail in obj.details.all()), default=None
+        )
 
 
 class OfferListSerializer(BaseOfferSerializer):
