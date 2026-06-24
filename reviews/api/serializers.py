@@ -40,6 +40,9 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     """Serializer for the Review model, handling validation and serialization of review data."""
 
+    created_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
+    updated_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
+
     class Meta:
         model = Review
         fields = "__all__"
