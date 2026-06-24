@@ -97,7 +97,7 @@ class OfferDetailAbsUrlSerializer(serializers.ModelSerializer):
         """Return the absolute URL for the OfferDetail object."""
 
         request = self.context.get("request")
-        return request.build_absolute_uri(f"/api/offers/details/{obj.id}/")
+        return request.build_absolute_uri(f"/api/offerdetails/{obj.id}/")
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
