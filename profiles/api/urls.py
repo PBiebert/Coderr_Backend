@@ -7,6 +7,14 @@ from .views import (
 
 urlpatterns = [
     path("profile/<int:pk>/", ProfileDetailAPIView.as_view(), name="profile-details"),
-    path("customer/", CustomerPorfilesAPIView.as_view(), name="customer-profiles"),
-    path("business/", BusinessPorfilesAPIView.as_view(), name="business-profiles"),
+    path(
+        "profiles/customer/",
+        CustomerPorfilesAPIView.as_view(),
+        name="customer-profiles",
+    ),
+    path(
+        "profiles/business/",
+        BusinessPorfilesAPIView.as_view(),
+        name="business-profiles",
+    ),
 ]
