@@ -7,7 +7,11 @@ from rest_framework import status
 
 
 class OfferDetailsApiTests(APITestCase):
+    """Test cases for the Offer Details API endpoint."""
+
     def setUp(self):
+        """Set up the test case with a valid user, offer, and offer details."""
+
         self.valid_user = create_user()
         self.token, created = Token.objects.get_or_create(user=self.valid_user)
         self.offer = create_offer(self.valid_user, offer_data())
@@ -21,7 +25,10 @@ class OfferDetailsApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offer_details_validate_response_data(self):
-        """Test that the response data from a GET request to retrieve offer details contains the expected fields"""
+        """
+        Test that the response data from a GET request to retrieve offer
+        details contains the expected fields
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
         response = self.client.get(self.valid_url)
@@ -50,7 +57,10 @@ class OfferDetailsApiTests(APITestCase):
             self.assertEqual(set(detail.keys()), expected_offer_detail_keys)
 
     def test_get_offer_details_unauthenticated_user_return_401(self):
-        """Test that an unauthenticated user cannot retrieve offer details and receives a 401 response"""
+        """
+        Test that an unauthenticated user cannot retrieve offer details
+        and receives a 401 response
+        """
 
         response = self.client.get(self.valid_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

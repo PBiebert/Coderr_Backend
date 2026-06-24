@@ -5,8 +5,10 @@ from rest_framework.exceptions import NotFound
 
 
 class OfferCreateSerializer(serializers.Serializer):
-    """Serializer for creating an order based on an offer detail. It includes a write-only field
-    for the offer_detail_id and read-only fields for the order details."""
+    """
+    Serializer for creating an order based on an offer detail. It includes
+    a write-only field for the offer_detail_id and read-only fields for the order details.
+    """
 
     offer_detail_id = serializers.IntegerField(write_only=True)
 
@@ -57,7 +59,10 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 
 class OrderDetailUpdateSerializer(serializers.ModelSerializer):
-    """Serializer for updating order details. It includes all fields of the Order model, but only allows updates to specific fields."""
+    """
+    Serializer for updating order details. It includes all fields of the Order
+    model, but only allows updates to specific fields.
+    """
 
     class Meta:
         model = Order

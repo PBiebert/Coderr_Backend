@@ -28,7 +28,10 @@ class OfferAPIView(generics.ListCreateAPIView):
     search_fields = ["title", "description"]
 
     def get_queryset(self):
-        """Return the queryset for the view, annotated with the minimum price of related OfferDetail objects."""
+        """
+        Return the queryset for the view, annotated with the minimum price of
+        related OfferDetail objects.
+        """
 
         return Offer.objects.all().annotate(min_price=Min("details__price"))
 
@@ -54,7 +57,10 @@ class OfferDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     http_method_names = ["get", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
-        """Return the queryset for the view, annotated with the minimum price of related OfferDetail objects."""
+        """
+        Return the queryset for the view, annotated with the minimum price of
+        related OfferDetail objects.
+        """
 
         return Offer.objects.all().annotate(min_price=Min("details__price"))
 

@@ -7,6 +7,8 @@ from rest_framework.authtoken.models import Token
 
 
 class ProfileAPITests(APITestCase):
+    """Test cases for the Profile API endpoints."""
+
     def setUp(self):
         """Set up valid user and profile data for testing"""
 
@@ -114,7 +116,10 @@ class ProfileAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_only_business_users(self):
-        """Test that the business profiles endpoint returns only profiles of users with type "business"""
+        """
+        Test that the business profiles endpoint returns only profiles of
+        users with type "business"
+        """
 
         fill_database_with_users()
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
@@ -132,13 +137,19 @@ class ProfileAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_all_business_return_401(self):
-        """Test that an unauthenticated user cannot retrieve the list of customers and receives a 401 response"""
+        """
+        Test that an unauthenticated user cannot retrieve the list of
+        customers and receives a 401 response
+        """
 
         response = self.client.get(self.url_business, format="multipart")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_only_customer_users(self):
-        """Test that the customer profiles endpoint returns only profiles of users with type "customer"""
+        """
+        Test that the customer profiles endpoint returns only profiles of
+        users with type "customer
+        """
 
         fill_database_with_users()
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
@@ -155,7 +166,10 @@ class ProfileAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_all_customers_return_401(self):
-        """Test that an unauthenticated user cannot retrieve the list of customers and receives a 401 response"""
+        """
+        Test that an unauthenticated user cannot retrieve the list of
+        customers and receives a 401 response
+        """
 
         response = self.client.get(self.url_customer, format="multipart")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

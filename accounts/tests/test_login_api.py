@@ -8,8 +8,10 @@ User = get_user_model()
 
 
 class LoginAPIHappyPathTests(APITestCase):
+    """Test cases for the login API endpoint, focusing on successful login scenarios."""
 
     def setUp(self):
+        """Set up the test case with a valid user and login data."""
 
         self.url = reverse("login")
         self.valid_user = create_user()
@@ -24,13 +26,18 @@ class LoginAPIHappyPathTests(APITestCase):
 
 
 class LoginAPIUnhappyPathTests(APITestCase):
+    """Test cases for the login API endpoint, focusing on unsuccessful login scenarios."""
 
     def setUp(self):
+        """Set up the test case with a valid user and login data."""
+
         self.url = reverse("login")
         self.valid_user = create_user()
         self.valid_login_data = user_login_data()
 
     def test_login_with_false_username_return_400(self):
+        """Test login with an invalid username returns 400"""
+
         login_data = self.valid_login_data.copy()
         login_data["username"] = "falseUsername"
 
@@ -38,6 +45,8 @@ class LoginAPIUnhappyPathTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_with_false_passwort_return_400(self):
+        """Test login with an invalid password returns 400"""
+
         login_data = self.valid_login_data.copy()
         login_data["password"] = "falseExamplePassword"
 

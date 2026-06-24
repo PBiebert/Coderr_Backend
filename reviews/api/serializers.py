@@ -49,7 +49,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ReviewDetailSerializer(serializers.ModelSerializer):
-    """Serializer for the Review model, handling validation and serialization of review data for update and delete operations."""
+    """
+    Serializer for the Review model, handling validation and serialization
+    of review data for update and delete operations.
+    """
 
     created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
     updated_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
@@ -62,7 +65,10 @@ class ReviewDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["reviewer", "business_user", "created_at", "updated_at"]
 
     def validate(self, attrs):
-        """Validation to ensure that only the 'rating' and 'description' fields can be updated."""
+        """
+        Validation to ensure that only the 'rating' and 'description'
+        fields can be updated.
+        """
 
         ALLOWED_FIELDS = {"rating", "description"}
         extra_fields = set(self.initial_data) - ALLOWED_FIELDS

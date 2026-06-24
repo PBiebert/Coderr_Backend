@@ -9,18 +9,15 @@ User = get_user_model()
 
 
 class RegistrationAPITests(APITestCase):
+    """Test cases for the user registration API endpoint."""
 
     def setUp(self):
-        """
-        Set up valid user data for testing
-        """
+        """Set up valid user data for testing."""
         self.valid_user_data = user_registration_data()
         self.url = reverse("registration")
 
     def test_user_can_be_created(self):
-        """
-        Test can user create
-        """
+        """Test can user created with valid data and that the user is created correctly."""
 
         self.valid_user_data.pop("repeated_password")
 
@@ -31,9 +28,7 @@ class RegistrationAPITests(APITestCase):
         self.assertEqual(user.type, "customer")
 
     def test_registration_with_valid_data_return_201(self):
-        """
-        Test registration with valid data returns 201
-        """
+        """Test registration with valid data returns 201"""
 
         response = self.client.post(self.url, self.valid_user_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -51,9 +46,7 @@ class RegistrationAPITests(APITestCase):
         self.assertEqual(response.data, expected_response)
 
     def test_registration_with_invalid_password_returns_400(self):
-        """
-        Test registration with mismatching passwords returns 400.
-        """
+        """Test registration with mismatching passwords returns 400."""
 
         userdata = self.valid_user_data.copy()
         userdata["repeated_password"] = "falsePassword"
@@ -63,9 +56,7 @@ class RegistrationAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_registration_with_invalid_email_returns_400(self):
-        """
-        Test registration with invalid email returns 400.
-        """
+        """Test registration with invalid email returns 400."""
 
         userdata = self.valid_user_data.copy()
         userdata["email"] = "exampleUsername.mail.de"
@@ -75,9 +66,7 @@ class RegistrationAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_registration_with_duplicate_userdata_returns_400(self):
-        """
-        Test registration with duplicate user data returns 400.
-        """
+        """Test registration with duplicate user data returns 400."""
 
         response_user_1 = self.client.post(
             self.url,

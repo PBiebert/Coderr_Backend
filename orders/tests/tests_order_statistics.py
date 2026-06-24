@@ -7,7 +7,13 @@ from rest_framework import status
 
 
 class OrderCountAPIViewTestCase(APITestCase):
+    """Test case for the OrderCountAPIView API endpoint."""
+
     def setUp(self):
+        """
+        Set up the test case with a customer user, two business users, and
+        multiple orders for each business user.
+        """
 
         self.custom_user = create_user()
         self.custom_token = Token.objects.create(user=self.custom_user)
@@ -36,7 +42,10 @@ class OrderCountAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_order_count_returns_correct_count(self):
-        """Test that the order count endpoint returns the correct count of in-progress orders for a business user"""
+        """
+        Test that the order count endpoint returns the correct count of
+        in-progress orders for a business user
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.custom_token.key)
         response = self.client.get(self.url)
@@ -44,13 +53,19 @@ class OrderCountAPIViewTestCase(APITestCase):
         self.assertEqual(response.data["order_count"], expected_count)
 
     def test_get_order_count_user_is_not_authenticated_returns_401(self):
-        """Test that the order count endpoint returns a 401 response when the user is not authenticated"""
+        """
+        Test that the order count endpoint returns a 401 response when the
+        user is not authenticated
+        """
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_order_count_business_user_not_found_returns_404(self):
-        """Test that the order count endpoint returns a 404 response when the specified business user is not found"""
+        """
+        Test that the order count endpoint returns a 404 response when the
+        specified business user is not found
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.custom_token.key)
         url = reverse("order-count", kwargs={"pk": 99})
@@ -89,7 +104,10 @@ class OrderCountAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_completed_order_count_returns_correct_count(self):
-        """Test that the completed order count endpoint returns the correct count of completed orders for a business user"""
+        """
+        Test that the completed order count endpoint returns the correct
+        count of completed orders for a business user
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.custom_token.key)
         response = self.client.get(self.url)
@@ -97,13 +115,19 @@ class OrderCountAPIViewTestCase(APITestCase):
         self.assertEqual(response.data["completed"], expected_count)
 
     def test_get_completed_order_count_user_is_not_authenticated_returns_401(self):
-        """Test that the completed order count endpoint returns a 401 response when the user is not authenticated"""
+        """
+        Test that the completed order count endpoint returns a 401 response
+        when the user is not authenticated
+        """
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_completed_order_count_business_user_not_found_returns_404(self):
-        """Test that the completed order count endpoint returns a 404 response when the specified business user is not found"""
+        """
+        Test that the completed order count endpoint returns a 404 response
+        when the specified business user is not found
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.custom_token.key)
         url = reverse("completed-order-count", kwargs={"pk": 99})

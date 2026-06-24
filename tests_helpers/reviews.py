@@ -2,7 +2,10 @@ from reviews.models import Review
 
 
 def review_data(customer_user, business_user, **kwargs):
-    """Returns a dictionary with default review data, which can be overridden by providing additional keyword arguments."""
+    """
+    Returns a dictionary with default review data, which can be overridden
+    by providing additional keyword arguments.
+    """
 
     return {
         "business_user": business_user,

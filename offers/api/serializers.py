@@ -41,7 +41,10 @@ class OfferCreateSerializer(serializers.ModelSerializer):
         ]
 
     def validate_details(self, value):
-        """Validate that there are no duplicate offer types and that there are exactly 3 details."""
+        """
+        Validate that there are no duplicate offer types and that there are
+        exactly 3 details.
+        """
 
         types = []
         for detail in value:
@@ -152,7 +155,10 @@ class OfferListSerializer(BaseOfferSerializer):
 
 
 class OfferDetailSerializer(BaseOfferSerializer):
-    """Serializer for retrieving offer details, including absolute URLs for related details."""
+    """
+    Serializer for retrieving offer details, including absolute URLs for
+    related details.
+    """
 
     details = OfferDetailAbsUrlSerializer(many=True, read_only=True)
 

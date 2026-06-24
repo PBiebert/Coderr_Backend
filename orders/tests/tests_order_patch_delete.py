@@ -8,7 +8,10 @@ from rest_framework import status
 
 
 class OrderPatchDeleteAPIViewTestCase(APITestCase):
+    """Test case for the OrderPatchDeleteAPIView API endpoint."""
+
     def setUp(self):
+        """Set up the test case with a customer user, business user, an offer, and an order."""
 
         self.custom_user = create_user()
         self.custom_token = Token.objects.create(user=self.custom_user)

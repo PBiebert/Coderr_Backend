@@ -7,7 +7,11 @@ from rest_framework import status
 
 
 class OfferApiTests(APITestCase):
+    """Test cases for the Offer API endpoints, including offer creation and retrieval."""
+
     def setUp(self):
+        """Set up the test case with a valid business user and offer data."""
+
         self.valid_business_user = create_user(type="business")
         self.token, created = Token.objects.get_or_create(user=self.valid_business_user)
         self.url = reverse("offer-list")
@@ -86,7 +90,10 @@ class OfferApiTests(APITestCase):
         self.assertIsInstance(response.data["results"], list)
 
     def test_get_offers_valid_response_structure(self):
-        """Test that the GET request to retrieve offers returns a response with the expected structure"""
+        """
+        Test that the GET request to retrieve offers returns a response
+        with the expected structure
+        """
 
         create_offer(self.valid_business_user, offer_data())
         response = self.client.get(self.url, format="json")
@@ -123,7 +130,10 @@ class OfferApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_offers_with_query_param_creator_id_return_200(self):
-        """Test that a GET request with a valid creator_id query parameter returns a 200 response"""
+        """
+        Test that a GET request with a valid creator_id query parameter
+        returns a 200 response
+        """
 
         offer = create_offer(self.valid_business_user, offer_data())
         creator_id_url = f"{self.url}?creator_id={offer.user.id}"
@@ -131,14 +141,20 @@ class OfferApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_invalid_query_param_creator_id_return_400(self):
-        """Test that a GET request with an invalid creator_id query parameter returns a 400 response"""
+        """
+        Test that a GET request with an invalid creator_id query parameter
+        returns a 400 response
+        """
 
         invalid_creator_id_url = f"{self.url}?creator_id=invalid"
         response = self.client.get(invalid_creator_id_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_offers_with_query_param_min_price_return_200(self):
-        """Test that a GET request with a valid min_price query parameter returns a 200 response"""
+        """
+        Test that a GET request with a valid min_price query parameter
+        returns a 200 response
+        """
 
         create_offer(self.valid_business_user, offer_data())
         min_price_url = f"{self.url}?min_price=200"
@@ -146,14 +162,20 @@ class OfferApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_offers_with_invalid_query_param_min_price_return_400(self):
-        """Test that a GET request with an invalid min_price query parameter returns a 400 response"""
+        """
+        Test that a GET request with an invalid min_price query parameter
+        returns a 400 response
+        """
 
         invalid_min_price_url = f"{self.url}?min_price=invalid"
         response = self.client.get(invalid_min_price_url, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_offers_with_query_param_max_delivery_time_return_200(self):
-        """Test that a GET request with a valid max_delivery_time query parameter returns a 200 response"""
+        """
+        Test that a GET request with a valid max_delivery_time query
+        parameter returns a 200 response
+        """
 
         create_offer(self.valid_business_user, offer_data())
         max_delivery_time_url = f"{self.url}?max_delivery_time=5"

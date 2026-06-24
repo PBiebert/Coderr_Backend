@@ -2,7 +2,10 @@ from offers.models import Offer, OfferDetail
 
 
 def offer_data(**kwargs):
-    """Return a dictionary of offer data with default values, allowing for overrides via kwargs."""
+    """
+    Return a dictionary of offer data with default values, allowing for
+    overrides via kwargs.
+    """
 
     return {
         "title": "Graphic Design Package",

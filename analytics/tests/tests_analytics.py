@@ -8,7 +8,11 @@ from rest_framework import status as http_status
 
 
 class PlatformBaseInfoViewTestCase(APITestCase):
+    """Test case for the PlatformBaseInfoView API endpoint."""
+
     def setUp(self):
+        """Set up the test case with a customer user, business users, offers, and reviews."""
+
         self.customer_user = create_user()
         self.customer_token = Token.objects.create(user=self.customer_user)
 
@@ -40,7 +44,10 @@ class PlatformBaseInfoViewTestCase(APITestCase):
         self.assertEqual(response.status_code, http_status.HTTP_200_OK)
 
     def test_get_platform_base_info_response_structure(self):
-        """Test the structure of the response returned by the GET request to retrieve platform base information."""
+        """
+        Test the structure of the response returned by the GET request to
+        retrieve platform base information.
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.customer_token.key)
         response = self.client.get(self.url)
@@ -55,7 +62,10 @@ class PlatformBaseInfoViewTestCase(APITestCase):
         self.assertEqual(set(response.data.keys()), expected_fields)
 
     def test_get_platform_base_info_values(self):
-        """Test the values returned by the GET request to retrieve platform base information."""
+        """
+        Test the values returned by the GET request to retrieve
+        platform base information.
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.customer_token.key)
         response = self.client.get(self.url)

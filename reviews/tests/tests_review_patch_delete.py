@@ -7,7 +7,14 @@ from rest_framework import status as http_status
 
 
 class ReviewPatchDeleteAPITestCase(APITestCase):
+    """Test case for the ReviewPatchDeleteAPIView API endpoint."""
+
     def setUp(self):
+        """
+        Set up the test case with a customer user, business user, a review,
+        and authentication tokens.
+        """
+
         self.custom_user = create_user()
         self.custom_token = Token.objects.create(user=self.custom_user)
 

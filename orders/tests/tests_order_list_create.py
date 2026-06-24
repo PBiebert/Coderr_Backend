@@ -8,7 +8,11 @@ from rest_framework import status
 
 
 class OrderListCreateAPIViewTestCase(APITestCase):
+    """Test case for the OrderListCreateAPIView API endpoint."""
+
     def setUp(self):
+        """Set up the test case with a customer user, business user, and an offer."""
+
         self.custom_user = create_user()
         self.custom_token = Token.objects.create(user=self.custom_user)
 
@@ -28,7 +32,10 @@ class OrderListCreateAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_order_valid_response_structure(self):
-        """Test that the response data structure when creating an order contains the expected fields"""
+        """
+        Test that the response data structure when creating an order contains
+        the expected fields
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.custom_token.key)
         data = {"offer_detail_id": 1}
@@ -53,7 +60,10 @@ class OrderListCreateAPIViewTestCase(APITestCase):
         self.assertEqual(set(response.data.keys()), expected_fields)
 
     def test_create_order_without_offer_detail_id_returns_400(self):
-        """Test that creating an order without providing an offer_detail_id returns a 400 response"""
+        """
+        Test that creating an order without providing an offer_detail_id
+        returns a 400 response
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.custom_token.key)
         data = {}
@@ -61,7 +71,10 @@ class OrderListCreateAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_order_is_not_authenticated_returns_401(self):
-        """Test that an unauthenticated user cannot create an order and receives a 401 response"""
+        """
+        Test that an unauthenticated user cannot create an order and receives
+        a 401 response
+        """
 
         data = {"offer_detail_id": 1}
 
@@ -77,7 +90,10 @@ class OrderListCreateAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_order_with_invalid_offer_detail_id_returns_404(self):
-        """Test that creating an order with a non-existent offer_detail_id returns a 404 response"""
+        """
+        Test that creating an order with a non-existent offer_detail_id returns
+        a 404 response
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.custom_token.key)
         data = {"offer_detail_id": 999}
@@ -92,7 +108,10 @@ class OrderListCreateAPIViewTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_orders_as_customer_returns_only_own_orders(self):
-        """Test that a customer retrieves only their own orders and not orders of other customers"""
+        """
+        Test that a customer retrieves only their own orders and not orders
+        of other customers
+        """
 
         for order in range(3):
             create_order(order_data(self.custom_user, self.business_user))
@@ -109,7 +128,10 @@ class OrderListCreateAPIViewTestCase(APITestCase):
             self.assertEqual(order["customer_user"], self.custom_user.id)
 
     def test_get_orders_as_business_user_returns_only_associated_orders(self):
-        """Test that a business user retrieves only orders associated with them and not orders of other businesses"""
+        """
+        Test that a business user retrieves only orders associated with
+        them and not orders of other businesses
+        """
 
         for order in range(3):
             create_order(order_data(self.custom_user, self.business_user))

@@ -7,7 +7,11 @@ from rest_framework import status
 
 
 class OfferSingleDetailApiTests(APITestCase):
+    """Test cases for the Offer Single Detail API endpoint."""
+
     def setUp(self):
+        """Set up the test case with a valid user, offer, and offer detail."""
+
         self.valid_user = create_user()
         self.token, created = Token.objects.get_or_create(user=self.valid_user)
         self.offer = create_offer(self.valid_user, offer_data())
@@ -23,7 +27,10 @@ class OfferSingleDetailApiTests(APITestCase):
         self.assertEqual(response.data["id"], self.detail.id)
 
     def test_get_offer_single_detail_validate_response_data(self):
-        """Test that the response data from a GET request to retrieve a single offer detail contains the expected fields"""
+        """
+        Test that the response data from a GET request to retrieve a
+        single offer detail contains the expected fields
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
         response = self.client.get(self.valid_url)
@@ -43,13 +50,19 @@ class OfferSingleDetailApiTests(APITestCase):
         self.assertIsInstance(data["features"], list)
 
     def test_get_offer_single_detail_unauthenticated_user_return_401(self):
-        """Test that a GET request to retrieve a single offer detail without authentication returns a 401 response"""
+        """T
+        est that a GET request to retrieve a single offer detail without
+        authentication returns a 401 response
+        """
 
         response = self.client.get(self.valid_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_offer_single_detail_non_existent_detail_return_404(self):
-        """Test that a GET request to retrieve a non-existent offer detail returns a 404 response"""
+        """
+        Test that a GET request to retrieve a non-existent offer detail
+        returns a 404 response
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
         invalid_url = reverse("offers_single_detail", kwargs={"pk": 99})
