@@ -112,7 +112,7 @@ class OrderCountAPIViewTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.custom_token.key)
         response = self.client.get(self.url)
         expected_count = 3
-        self.assertEqual(response.data["completed"], expected_count)
+        self.assertEqual(response.data["completed_order_count"], expected_count)
 
     def test_get_completed_order_count_user_is_not_authenticated_returns_401(self):
         """

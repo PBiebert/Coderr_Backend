@@ -64,6 +64,9 @@ class OrderDetailUpdateSerializer(serializers.ModelSerializer):
     model, but only allows updates to specific fields.
     """
 
+    created_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
+    updated_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
+
     class Meta:
         model = Order
         fields = "__all__"
